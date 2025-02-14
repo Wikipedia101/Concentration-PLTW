@@ -5,18 +5,15 @@
  * @version 2.0
  */
 
+import java.util.ArrayList;
+
 /** 
  * A Board class for concentration
  */
 public class Board
 {  
-  private static String[] tileValues = {"lion", "lion",
-                                        "penguin", "penguin",
-                                        "dolphin", "dolphin",
-                                        "fox", "fox",
-                                        "monkey", "monkey",
-                                        "turtle", "turtle"}; 
-  private Tile[][] gameboard = new Tile[3][4];
+  private static String[] tileValues = {"red", "orange", "yellow", "green", "blue", "indigo", "violet", "pink", "red", "orange", "yellow", "green", "blue", "indigo", "violet", "pink"}; 
+  private Tile[][] gameboard = new Tile[4][4];
 
   /**  
    * Constructor for the game. Creates the 2D gameboard
@@ -25,8 +22,22 @@ public class Board
    */
   public Board()
   {
-   
-    /* your code here */ 
+    int tileNum = 16;
+    ArrayList<String> uh = new ArrayList<String> ();
+
+    for(int i =0; i<tileValues.length; i++){
+      uh.add(i, tileValues[i]);
+    }
+
+   for (int r = 0; r < gameboard.length; r++) {
+    for (int c = 0; c < gameboard[r].length; c++) {
+      int inde1 = (int)(Math.random()*uh.size());
+      gameboard[r][c] = new Tile(uh.get(inde1));
+      uh.remove(inde1);
+    
+      
+    }
+   }
 
   }
 
@@ -41,10 +52,19 @@ public class Board
    */
   public String toString()
   {
+    String result = "";
+    for (int r = 0; r < gameboard.length; r++) {
+      for (int c = 0; c < gameboard[r].length; c++) {
+        if (gameboard[r][c].isShowingValue()) {
+          result = result + gameboard[r][c].getValue() + " ";
+        } else {
+          result = result + gameboard[r][c].getHidden() + " ";
+        }
+      }
+      result = result + "\n";
+    }
  
-    /* your code here */
- 
-    return "";
+    return result;
   }
 
   /** 
@@ -57,9 +77,14 @@ public class Board
    */
   public boolean allTilesMatch()
   {
+    for (int r = 0; r < gameboard.length; r++) {
+      for (int c = 0; c < gameboard[r].length; c++) {
+        if(gameboard[r][c].matched() == false){
+          return false;
+        }
 
-    /* your code  here */
-    
+      }
+    }    
     return true;
   }
 
@@ -77,7 +102,7 @@ public class Board
   public void showValue (int row, int column)
   {
    
-    /* your code here */
+    gameboard[row][column].show();
   }  
 
   /** 
@@ -99,11 +124,20 @@ public class Board
    */
   public String checkForMatch(int row1, int col1, int row2, int col2)
   {
-    String msg = "";
+    String msg = "matched";
+    if(gameboard[row1][col1].getValue() == gameboard[row2][col2].getValue()){
+      gameboard[row1][col1].foundMatch();
+      gameboard[row2][col2].foundMatch();
+      return msg;
+    }
+    else{
+      gameboard[row1][col1].hide();
+      gameboard[row2][col2].hide();
+      return "not matched";
+    }
 
      /* your code here */
     
-     return msg;
   }
 
   /** 
@@ -117,9 +151,12 @@ public class Board
   public boolean validateSelection(int row, int col)
   {
 
-    /* your code here */
-
-    return true;
+    if (row < gameboard.length && col < gameboard[0].length && gameboard[row][col].matched() == false) {
+      return true;
+    } else {
+      return false;
+    }
+  
   }
 
 }

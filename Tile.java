@@ -50,6 +50,11 @@ public class Tile
   {
     return value;
   }
+
+  public void setValue(String a)
+  {
+    value = a;
+  }
     
   /**
    * Get the hidden value of this tile (face down value)
